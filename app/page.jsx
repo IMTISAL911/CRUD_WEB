@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 import {
   fetchUsers,
   addUser,
@@ -11,6 +12,7 @@ import {
 
 export default function Home() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const users = useSelector((state) => state.users.list);
 
   const [name, setName] = useState("");
@@ -20,8 +22,10 @@ export default function Home() {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  const handleAdd = () => {
+  const handleAdd = (e) => {
+    e.preventDefault();
     if (!name || !email) return;
+
     dispatch(addUser({ name, email }));
     setName("");
     setEmail("");
@@ -52,8 +56,8 @@ export default function Home() {
           USER MANAGEMENT
         </h1>
 
-        {/* ✅ INPUT */}
-        <div className="flex gap-2 mb-6">
+        {/* INPUT */}
+        <form className="flex gap-2 mb-6">
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -66,15 +70,25 @@ export default function Home() {
             placeholder="Enter email"
             className="flex-1 p-2 rounded-lg border"
           />
+
           <button
+            type="button"
             onClick={handleAdd}
             className="px-4 bg-green-500 text-white rounded-lg"
           >
             Add
           </button>
-        </div>
 
-        {/* ✅ TABLE */}
+          <button
+            type="button"
+            onClick={() => router.push("/save")}
+            className="px-4 bg-purple-500 text-white rounded-lg"
+          >
+            Save
+          </button>
+        </form>
+
+        {/* TABLE */}
         <table className="w-full border border-white/30 rounded-lg overflow-hidden">
           <thead className="bg-white/20">
             <tr>
@@ -87,23 +101,20 @@ export default function Home() {
 
           <tbody>
             {users.map((user) => (
-              <tr
-                key={user.id}
-                className="border-t border-white/20 hover:bg-white/10 transition"
-              >
+              <tr key={user.id} className="border-t border-white/20">
                 <td className="p-3">{user.id}</td>
                 <td className="p-3">{user.name}</td>
                 <td className="p-3">{user.email}</td>
                 <td className="p-3 text-center space-x-2">
                   <button
                     onClick={() => handleEdit(user)}
-                    className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    className="px-3 py-1 bg-blue-500 text-white rounded-lg"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(user.id)}
-                    className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                    className="px-3 py-1 bg-red-500 text-white rounded-lg"
                   >
                     Delete
                   </button>
