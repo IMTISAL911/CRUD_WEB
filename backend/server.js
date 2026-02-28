@@ -1,8 +1,13 @@
-const express = require("express");
-const cors = require("cors");
+// const express = require("express");
+// const cors = require("cors");
+
+import express from "express"
+import cors from "cors"
 
 const app = express();
 const PORT = 5000;
+
+
 
 // middleware
 app.use(cors());
@@ -14,7 +19,7 @@ let users = [
   { id: 2, name: "SARA", email: "sara@gmail.com" },
   { id: 3, name: "Ahmed", email: "ahmed@gmail.com" },
 ];
-
+let nextId = users.length + 1;
 // ================= ROUTES =================
 
 // ✅ GET USERS
@@ -31,7 +36,8 @@ app.post("/api/users", (req, res) => {
   }
 
   const newUser = {
-    id: Date.now(),
+    // id: Date.now(),
+    id: nextId++,
     name,
     email,
   };
